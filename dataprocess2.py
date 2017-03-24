@@ -1,6 +1,14 @@
 #!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 """
+Created on Fri Mar 24 16:26:14 2017
+
+@author: xlychee
+"""
+
+#!/usr/bin/env python2
+# -*- coding: utf-8 -*-
+"""
 Created on Fri Mar 24 14:04:12 2017
 
 @author: xlychee
@@ -19,11 +27,24 @@ def curtime():
 
 print curtime()+" Program begin"
 
-df = pd.read_csv('../checkins.txt', names=['user_id','tweet_id','lat','lon','date','place_id','tags'],sep='\t');
+df = pd.read_csv('../gowalla.txt', names=['user_id','time','lat','lon','place_id'],delim_whitespace=True);
 
 userids =df['user_id']
 placeids =df['place_id']
-timeinfos = df['date']
+timeinfos = df['time']
+
+
+gps = {}
+for index,item in df.iterrows():
+    pid = item['place_id']
+    lat = item['lat']
+    lon = item['lon']
+    if pid in gps.keys():
+        if gps[pid][0] != lat or gps[pid][1]!=lon:
+            print 'wrong'
+    else:
+        gps[pid]=(lat,lon)
+
 
 
 def timeid(timeinfo):
@@ -42,15 +63,8 @@ def timeid(timeinfo):
     #print month,weekday,hour
     return month*8+weekday*4+hour
 
-timeids = np.array(map(timeid,timeinfos))
+#timeids = np.array(map(timeid,timeinfos))
 
-class stellar():
-    def __init__(lm,d):
-        self.lambda = lm
-        self.latendDim = d
-        self.L1 = 
-        
-    def train():
         
         
     
