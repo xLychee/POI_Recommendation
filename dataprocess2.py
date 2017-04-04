@@ -35,15 +35,30 @@ timeinfos = df['time']
 
 
 gps = {}
+ucount = {}
+pcount = {}
+
+
+df.groupby('place_id').mean()
+
+
 for index,item in df.iterrows():
+    if index%1000==0:
+        print index
+    uid = item['user_id']
     pid = item['place_id']
     lat = item['lat']
+    ucount[uid] = ucount.get(uid,0)+1
+    pcount[pid] = pcount.get(pid,0)+1
     lon = item['lon']
     if pid in gps.keys():
         if gps[pid][0] != lat or gps[pid][1]!=lon:
+            print gps[pid][0],lat,gps[pid][1],lon
             print 'wrong'
     else:
         gps[pid]=(lat,lon)
+        
+
 
 
 
@@ -64,8 +79,5 @@ def timeid(timeinfo):
     return month*8+weekday*4+hour
 
 #timeids = np.array(map(timeid,timeinfos))
-
-        
-        
     
 print curtime()+ "Program end"
