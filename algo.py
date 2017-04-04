@@ -6,8 +6,11 @@ import numpy as np
 import datetime
 import math
 import pickle
+from sklearn.model_selection import train_test_split
 
 df = pd.read_csv('../train_new')
+
+dftrain,dftest = train_test_split(df, test_size = 0.2)
 
 logfile =open("../log.txt", 'w+')
 modelobject =open( "../modelobject", 'w+')
@@ -37,12 +40,13 @@ class stellar(object):
     def score(self,u,t,lq_2,lc_1,lc_2,lc_3,w):
         return lc_1.dot(u)+w*lc_2.dot(lq_2)+lc_3.dot(t)
             
-    def train(self,df, reg=0.001, iterations = 200, k = 20, learning_rate = 0.0001):
+    def train(self,df, reg=0.001, iterations = 100, k = 20, learning_rate = 0.0001):
         
         num_tuples = df.shape[0]
         
         places = np.array(self.places)
         
+        initime = time.time()
         for ite in xrange(iterations):
             
             loss = 0
@@ -123,9 +127,9 @@ class stellar(object):
                     + np.sum(ln2**2) + np.sum(ln3**2))
                 loss_t = loss_t / realk
                 loss+=loss_t
-                if i%10000 ==0 and i!=0:
+                if i%10000 ==0 :
                     loss = loss/10000
-                    print "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
+                    print time.time()-initime, "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
                     print >>logfile, "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
                     loss = 0
                     
@@ -133,6 +137,7 @@ class stellar(object):
         num_tuples = df.shape[0]
         places = self.places
         correct_num=0
+        initime = time.time()
         for i in xrange(num_tuples):
             u_id = df.iloc[i]['user_id']
             t_id = df.iloc[i]['now_time']
@@ -160,14 +165,15 @@ class stellar(object):
             rec_plc = [pair[0] for pair in scores[:5]]
             if lp_id in rec_plc:
                 correct_num+=1
-            print "now precision:", float(correct_num)/(i+1)
-            print >>logfile, "now precision:", float(correct_num)/(i+1)
+            if i%100==0:
+                print i,"/",num_tuples, time.time()-initime,"now precision:", float(correct_num)/(i+1)
+                print >>logfile, "now precision:", float(correct_num)/(i+1)
         precision = float(correct_num)/num_tuples
         print "precision: ", precision
         
 model = stellar(df)
-model.train(df)
-model.test(df)
+model.train(dftrain)
+model.test(dftest)
 pickle.dump(model, modelobject)
 logfile.close()
 modelobject.close()
