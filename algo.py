@@ -8,9 +8,12 @@ import math
 
 df = pd.read_csv('../train_new')
 
+logfile =open("../log.txt", 'w+')
+modelobject =open( "../modelobject", 'w+')
+
 class stellar(object):
     def __init__(self, df):
-        self.dim_feature = 5
+        self.dim_feature = 40
         self.U = {}
         for index in df['user_id'].unique():
             self.U[index] = np.random.rand(self.dim_feature)
@@ -33,7 +36,7 @@ class stellar(object):
     def score(self,u,t,lq_2,lc_1,lc_2,lc_3,w):
         return lc_1.dot(u)+w*lc_2.dot(lq_2)+lc_3.dot(t)
             
-    def train(self,df, reg=0.001, iterations = 100, k = 20, learning_rate = 0.0001):
+    def train(self,df, reg=0.001, iterations = 200, k = 20, learning_rate = 0.0001):
         
         num_tuples = df.shape[0]
         
@@ -122,6 +125,7 @@ class stellar(object):
                 if i%1000 ==0 and i!=0:
                     loss = loss/1000
                     print "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
+                    print >>logfile, "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
                     loss = 0
                     
     def test(self,df):
@@ -156,12 +160,15 @@ class stellar(object):
             if lp_id in rec_plc:
                 correct_num+=1
             print "now precision:", float(correct_num)/(i+1)
+            print >>logfile, "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
         precision = float(correct_num)/num_tuples
         print "precision: ", precision
         
 model = stellar(df)
 model.train(df)
 model.test(df)
+logfile.close()
+modelobject.close()
 
 
                 
