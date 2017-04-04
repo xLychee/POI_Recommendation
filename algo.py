@@ -5,6 +5,7 @@ import random
 import numpy as np
 import datetime
 import math
+import pickle
 
 df = pd.read_csv('../train_new')
 
@@ -122,8 +123,8 @@ class stellar(object):
                     + np.sum(ln2**2) + np.sum(ln3**2))
                 loss_t = loss_t / realk
                 loss+=loss_t
-                if i%1000 ==0 and i!=0:
-                    loss = loss/1000
+                if i%10000 ==0 and i!=0:
+                    loss = loss/10000
                     print "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
                     print >>logfile, "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
                     loss = 0
@@ -160,13 +161,14 @@ class stellar(object):
             if lp_id in rec_plc:
                 correct_num+=1
             print "now precision:", float(correct_num)/(i+1)
-            print >>logfile, "ite: %d/%d, tuple:%d/%d, loss: %s" %(ite,iterations,i,num_tuples,loss)
+            print >>logfile, "now precision:", float(correct_num)/(i+1)
         precision = float(correct_num)/num_tuples
         print "precision: ", precision
         
 model = stellar(df)
 model.train(df)
 model.test(df)
+pickle.dump(model, modelobject)
 logfile.close()
 modelobject.close()
 
