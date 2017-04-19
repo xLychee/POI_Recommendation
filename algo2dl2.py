@@ -61,7 +61,7 @@ for t in times:
         map_times[t] = counter
         counter+=1
         
-    
+
 
 def weight_variable(shape):
     initial = tf.truncated_normal(shape, stddev=0.1)
@@ -147,7 +147,7 @@ def predict(u_id,lq_id,t_id):
 
 print curtime()+" Training begin "
 begintime = time.time() 
-total_steps = 1000
+total_steps = 50000
 hit = 0
 for i in range(total_steps):
     u_id = map_users[df.iloc[i]['user_id']]
@@ -162,7 +162,7 @@ for i in range(total_steps):
     
     if i%10 == 0 and i!=0:
         used_time = str(timedelta(seconds=int(time.time()-begintime)))
-        print "here", u_id, lq_id, lp_id, t_id
+        #print "here", u_id, lq_id, lp_id, t_id
         current_accuracy = float(hit)/i
 
         print("step %d/%d, used time %s, current train accuracy %g" %(i,total_steps, used_time, current_accuracy))
