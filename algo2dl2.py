@@ -13,7 +13,7 @@ import random
 import numpy as np
 import datetime
 import tensorflow as tf
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 import math
 import pickle
 from sklearn.model_selection import train_test_split
@@ -27,7 +27,7 @@ def curtime():
 print curtime()+" Program begin "
 
 
-df = pd.read_csv('./train_new_41')
+df = pd.read_csv('../train_new_41')
 
 
 df,dftest = train_test_split(df, test_size = 0.2)
