@@ -100,18 +100,23 @@ net = tflearn.fully_connected(net_p,500,activation='Relu',weights_init = 'normal
 +tflearn.fully_connected(net_u,500,activation='Relu',weights_init = 'normal',regularizer='L2')\
 +tflearn.fully_connected(net_t,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
-net = tflearn.activation(net,activation='Relu')
+net = tflearn.batch_normalization(net)
 
 net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
+net = tflearn.batch_normalization(net)
 net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
+net = tflearn.batch_normalization(net)
 net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
+net = tflearn.batch_normalization(net)
 net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
+net = tflearn.batch_normalization(net)
 net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
+net = tflearn.batch_normalization(net)
 net = tflearn.fully_connected(net, num_places,weights_init = 'normal',activation='softmax')
 
 
