@@ -78,41 +78,41 @@ net_p = tflearn.input_data(shape = [None],dtype='int32')
 
 net_p = tflearn.one_hot_encoding(net_p, n_classes=num_places)
 
-net_p = tflearn.fully_connected(net_p,100,activation='linear',regularizer='L2')
+net_p = tflearn.fully_connected(net_p,200,activation='linear',weights_init = 'normal', regularizer='L2')
 
 
 net_u = tflearn.input_data(shape = [None],dtype='int32')
 
 net_u = tflearn.one_hot_encoding(net_u, n_classes=num_users)
 
-net_u = tflearn.fully_connected(net_u,100,activation='linear',regularizer='L2')
+net_u = tflearn.fully_connected(net_u,200,activation='linear',weights_init = 'normal',regularizer='L2')
 
 
 net_t = tflearn.input_data(shape = [None],dtype='int32')
 
 net_t = tflearn.one_hot_encoding(net_t, n_classes=num_times)
 
-net_t = tflearn.fully_connected(net_t,50,activation='linear',regularizer='L2')
+net_t = tflearn.fully_connected(net_t,100,activation='linear',weights_init = 'normal',regularizer='L2')
 
 
 
-net = tflearn.fully_connected(net_p,300,activation='linear',regularizer='L2')\
-+tflearn.fully_connected(net_u,300,activation='linear',regularizer='L2')\
-+tflearn.fully_connected(net_t,300,activation='linear',regularizer='L2')
+net = tflearn.fully_connected(net_p,500,activation='Relu',weights_init = 'normal',regularizer='L2')\
++tflearn.fully_connected(net_u,500,activation='Relu',weights_init = 'normal',regularizer='L2')\
++tflearn.fully_connected(net_t,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
 net = tflearn.activation(net,activation='Relu')
 
-net = tflearn.fully_connected(net,300,activation='Relu',regularizer='L2')
+net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
-net = tflearn.fully_connected(net,300,activation='Relu',regularizer='L2')
+net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
-net = tflearn.fully_connected(net,300,activation='Relu',regularizer='L2')
+net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
-net = tflearn.fully_connected(net,300,activation='Relu',regularizer='L2')
+net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
-net = tflearn.fully_connected(net,200,activation='Relu',regularizer='L2')
+net = tflearn.fully_connected(net,500,activation='Relu',weights_init = 'normal',regularizer='L2')
 
-net = tflearn.fully_connected(net, num_places,activation='softmax')
+net = tflearn.fully_connected(net, num_places,weights_init = 'normal',activation='softmax')
 
 
 #net_y = tflearn.input_data(shape = [None],dtype='int32', name='1')
@@ -142,14 +142,15 @@ X_u_test = X_u[-10000:]
 X_t_test = X_t[-10000:]
 y_test = y[-10000:]
 
-model.fit([X_p_train,X_u_train,X_t_train],y_train,n_epoch=20,batch_size=100,show_metric=True)
+model.fit([X_p_train,X_u_train,X_t_train],y_train,validation_set=([X_p_test,X_u_test,X_t_test],y_test),
+          n_epoch=20,batch_size=500,show_metric=True)
 
 predictions = model.predict([X_p_test,X_u_test,X_t_test])
 
 correct = 0
 total_test = y_test.shape[0]
 for i in xrange(y_test.shape[0]):
-    pred = predictions[i]
+    pred = np.array(predictions[i]) 
     if y_test[i] in pred.argsort()[-5:]:
         correct+=1
 print 'precision:', float(correct)/total_test
