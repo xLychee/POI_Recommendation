@@ -142,7 +142,7 @@ X_u_test = X_u[-10000:]
 X_t_test = X_t[-10000:]
 y_test = y[-10000:]
 
-model.fit([X_p_train,X_u_train,X_t_train],y_train,n_epoch=50,batch_size=100,show_metric=True)
+model.fit([X_p_train,X_u_train,X_t_train],y_train,n_epoch=20,batch_size=100,show_metric=True)
 
 predictions = model.predict([X_p_test,X_u_test,X_t_test])
 
